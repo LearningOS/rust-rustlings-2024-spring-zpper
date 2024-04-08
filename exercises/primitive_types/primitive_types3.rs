@@ -5,10 +5,10 @@
 // Execute `rustlings hint primitive_types3` or use the `hint` watch subcommand
 // for a hint.
 
-// I AM NOT DONE
+use std::str::Chars;
 
 fn main() {
-    let a = ???
+    let a: Vec<Chars> = Vec::new();
 
     if a.len() >= 100 {
         println!("Wow, that's a big array!");
