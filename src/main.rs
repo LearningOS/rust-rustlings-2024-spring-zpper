@@ -371,6 +371,7 @@ async fn main() {
                 println!("We hope you're enjoying learning about Rust!");
                 println!("If you want to continue working on the exercises at a later point, you can simply run `rustlings watch` again");
             }
+
         },
     }
 }
