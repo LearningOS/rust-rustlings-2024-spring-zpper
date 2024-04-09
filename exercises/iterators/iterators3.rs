@@ -8,9 +8,6 @@
 //
 // Execute `rustlings hint iterators3` or use the `hint` watch subcommand for a
 // hint.
-
-// I AM NOT DONE
-
 #[derive(Debug, PartialEq, Eq)]
 pub enum DivisionError {
     NotDivisible(NotDivisibleError),
@@ -26,23 +23,57 @@ pub struct NotDivisibleError {
 // Calculate `a` divided by `b` if `a` is evenly divisible by `b`.
 // Otherwise, return a suitable error.
 pub fn divide(a: i32, b: i32) -> Result<i32, DivisionError> {
-    todo!();
+    if b != 0 {
+        if a % b == 0 {
+            Ok(a / b)
+        } else {
+            let res = DivisionError::NotDivisible(NotDivisibleError {
+                dividend: a,
+                divisor: b,
+            });
+            Err(res)
+        }
+    } else {
+        Err(DivisionError::DivideByZero)
+    }
 }
 
 // Complete the function and return a value of the correct type so the test
 // passes.
 // Desired output: Ok([1, 11, 1426, 3])
-fn result_with_list() -> () {
+fn result_with_list() -> (Result<Vec<i32>, DivisionError>) {
     let numbers = vec![27, 297, 38502, 81];
     let division_results = numbers.into_iter().map(|n| divide(n, 27));
+    let mut res = vec![];
+    for x in division_results {
+        if let Ok(e) = x {
+            res.push(e);
+        }
+    }
+
+    Ok(res)
 }
 
 // Complete the function and return a value of the correct type so the test
 // passes.
 // Desired output: [Ok(1), Ok(11), Ok(1426), Ok(3)]
-fn list_of_results() -> () {
+fn list_of_results() -> Vec<Result<i32, DivisionError>> {
     let numbers = vec![27, 297, 38502, 81];
     let division_results = numbers.into_iter().map(|n| divide(n, 27));
+    let mut res = vec![];
+    for x in division_results {
+        res.push(x);
+    }
+    res
+    // let matstr = division_results.into_iter().map(|n| {
+    //     if let Ok(x) = n {
+    //         "Ok(" + x + ")"
+    //     } else {
+    //         "Err(" + x + ")"
+    //     }
+    // }).collect();
+    //
+    // matstr
 }
 
 #[cfg(test)]
@@ -60,7 +91,7 @@ mod tests {
             divide(81, 6),
             Err(DivisionError::NotDivisible(NotDivisibleError {
                 dividend: 81,
-                divisor: 6
+                divisor: 6,
             }))
         );
     }

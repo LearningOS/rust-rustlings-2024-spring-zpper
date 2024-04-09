@@ -22,7 +22,8 @@
 // Execute `rustlings hint tests5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
+use std::ptr::addr_of_mut;
 
 /// # Safety
 ///
@@ -32,7 +33,9 @@ unsafe fn modify_by_address(address: usize) {
     // code's behavior and the contract of this function. You may use the
     // comment of the test below as your format reference.
     unsafe {
-        todo!("Your code goes here")
+
+        let target = address as *mut u32;
+        *target = 0xAABBCCDD;
     }
 }
 
