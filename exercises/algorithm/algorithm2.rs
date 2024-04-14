@@ -2,8 +2,6 @@
 	double linked list reverse
 	This problem requires you to reverse a doubly linked list
 */
-// I AM NOT DONE
-
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
@@ -72,14 +70,75 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn reverse(&mut self){
-		// TODO
-	}
+    pub fn reverse(&mut self) where T: Copy + Display {
+        // let length = self.length as i32;
+        // let is_init = false;
+        // let start: Option<NonNull<Node<T>>> = None;
+        // let end: Option<NonNull<Node<T>>> = None;
+        //
+        // let mut old_start = self.start.unwrap();
+        // for i in 0..length {
+        //     if !is_init {
+        //         let res_box = Box::new(Node::new(t));
+        //         let node_start_prt = Some(unsafe { NonNull::new_unchecked(Box::into_raw(res_box)) });
+        //         let node_end_prt = Some(unsafe { NonNull::new_unchecked(Box::into_raw(res_box)) });
+        //
+        //         start = node_start_prt;
+        //         end = node_end_prt;
+        //         is_init = true;
+        //     }
+        //     let res = self.get(i);
+        // }
+
+        let mut old_start = self.start.unwrap();
+        self.end = None;
+
+        loop {
+            let t = unsafe { (*old_start.as_ptr()).val };
+            let res_box: Box<Node<T>> = Box::new(Node::new(t));
+
+            let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(res_box)) });
+            unsafe { (*node_ptr.unwrap().as_ptr()).next = self.start; }
+
+            match self.end {
+                Some(end) => {
+                    // match self.start {
+                    //     Some(new_start) => {
+                    //         unsafe {
+                    //             (*new_start.as_ptr()).next = node_ptr;
+                    //             (*node_ptr.unwrap().as_ptr()).prev = node_ptr;
+                    //         }
+                    //     }
+                    //     None => {}
+                    // }
+                    println!("self =  {}", self);
+                    self.start = node_ptr;
+                }
+                None => {
+                    self.end = node_ptr;
+                    self.start = node_ptr;
+                }
+            }
+            println!("t = {}", t);
+
+            let node = unsafe { (*old_start.as_ptr()).next };
+            match node {
+                Some(old_node) => {
+                    old_start = old_node;
+                }
+                None => {
+                    break;
+                }
+            }
+        }
+
+        unsafe { (*self.end.unwrap().as_ptr()).next = None; }
+    }
 }
 
 impl<T> Display for LinkedList<T>
-where
-    T: Display,
+    where
+        T: Display,
 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.start {
