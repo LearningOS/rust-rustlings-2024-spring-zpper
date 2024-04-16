@@ -2,20 +2,23 @@
 	graph
 	This problem requires you to implement a basic graph functio
 */
-// I AM NOT DONE
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
+
 #[derive(Debug, Clone)]
 pub struct NodeNotInGraph;
+
 impl fmt::Display for NodeNotInGraph {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "accessing a node that is not in the graph")
     }
 }
+
 pub struct UndirectedGraph {
     adjacency_table: HashMap<String, Vec<(String, i32)>>,
 }
+
 impl Graph for UndirectedGraph {
     fn new() -> UndirectedGraph {
         UndirectedGraph {
@@ -29,18 +32,32 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        self.add_edge_shadow(edge);
+        self.add_edge_shadow((edge.1, edge.0, edge.2));
+    }
+
+    fn add_edge_shadow(&mut self, edge: (&str, &str, i32)) {
+        if let Some(ref mut next) = self.adjacency_table.get_mut(edge.0) {
+            next.push((String::from(edge.1), edge.2));
+        } else {
+            let mut collecot = vec![];
+            collecot.push((String::from(edge.1), edge.2));
+            self.adjacency_table.insert(String::from(edge.0), collecot);
+        }
     }
 }
+
 pub trait Graph {
     fn new() -> Self;
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+        true
     }
-    fn add_edge(&mut self, edge: (&str, &str, i32)) {
+    fn add_edge(&mut self, edge: (&str, &str, i32)) {}
+
+    fn add_edge_shadow(&mut self, edge: (&str, &str, i32)) {
         //TODO
     }
     fn contains(&self, node: &str) -> bool {
@@ -59,10 +76,12 @@ pub trait Graph {
         edges
     }
 }
+
 #[cfg(test)]
 mod test_undirected_graph {
     use super::Graph;
     use super::UndirectedGraph;
+
     #[test]
     fn test_add_edge() {
         let mut graph = UndirectedGraph::new();
